@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>PlanIt</title>
+    <link rel="stylesheet" href="./css/css-grids.css" type="text/css">
+    <link rel="stylesheet" href="./css/float-grid.css" type="text/css">
+    <link rel="stylesheet" href="./css/main.css" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="grid-container">
+        <header class="header">
+            <h1>PlanIt</h1>
+        </header>
+        <main id="left-panel" class="left-side list">
+            <input id="initial-input" class="controls" type="text">
+            <input id="destination-input" class="controls" type="text">
+            <div id="mode-selector" class="controls">
+                <input type="radio" name="type" id="changemode-walking" checked="checked">
+                <label for="changemode-walking">Walking</label>
+            
+                <input type="radio" name="type" id="changemode-transit">
+                <label for="changemode-transit">Transit</label>
+            
+                <input type="radio" name="type" id="changemode-driving">
+                <label for="changemode-driving">Driving</label>
+            </div>
+            <div class="js-map-leg-info"></div>
+            <div class="js-add-input">
+                <input id="waypoint-input" class="controls" type="text">
+            </div>
+        </main>
+        <section class="right-side gmap">
+            <div id="map" class="gmap"></div>
+        </section>
+    </div>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCbKjvR3xSU6ODz37cp9YmRgb3pYMH0i8&libraries=places&callback=initMap"
+    async defer></script>
+</body>
+</html>

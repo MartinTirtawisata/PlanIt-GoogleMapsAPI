@@ -1,0 +1,37 @@
+.header{
+    grid-area: h;
+    
+    border: 2px solid black;
+}
+
+.left-side {
+    grid-area: ls;
+
+    border: 2px solid red;
+}
+
+.right-side {
+    grid-area: rs;
+
+    border: 2px solid black;
+}
+
+/* 12 width * 8 height */
+.grid-container{
+    display: grid;
+    height: 100vh;
+    width: 100vw;
+    /* grid-auto-rows: minmax(100px, auto); */
+    grid-template-areas:
+    'h h h h h h h h h h h h'
+    'ls ls rs rs rs rs rs rs rs rs rs rs'
+    'ls ls rs rs rs rs rs rs rs rs rs rs'
+    'ls ls rs rs rs rs rs rs rs rs rs rs'
+    'ls ls rs rs rs rs rs rs rs rs rs rs'
+    'ls ls rs rs rs rs rs rs rs rs rs rs'
+    'ls ls rs rs rs rs rs rs rs rs rs rs'
+    'ls ls rs rs rs rs rs rs rs rs rs rs'
+    'ls ls rs rs rs rs rs rs rs rs rs rs'
+    'ls ls rs rs rs rs rs rs rs rs rs rs'
+
+}
