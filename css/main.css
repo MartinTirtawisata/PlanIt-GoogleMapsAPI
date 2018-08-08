@@ -5,7 +5,26 @@
     /* float: right; */
 }
 
-#waypoint-input{
-    /* display: none; */
+.waypoint-input-0{
+    display: none;
 }
 
+.waypoint-input-1{
+    display: none;
+}
+
+.waypoint-input-2{
+    display: none;
+}
+
+.waypoint-input-3{
+    display: none;
+}
+
+.waypoint-input-4{
+    display: none;
+}
+
+.waypoint-input-5{
+    display: none;
+}
