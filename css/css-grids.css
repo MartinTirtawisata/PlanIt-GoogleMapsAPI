@@ -6,12 +6,15 @@
 
 .left-side {
     grid-area: ls;
+    max-width:350px;
+    /* padding-right: 0; */
 
     border: 2px solid red;
 }
 
 .right-side {
     grid-area: rs;
+    padding-left: 0;
 
     border: 2px solid black;
 }
@@ -24,14 +27,14 @@
     /* grid-auto-rows: minmax(100px, auto); */
     grid-template-areas:
     'h h h h h h h h h h h h'
-    'ls ls rs rs rs rs rs rs rs rs rs rs'
-    'ls ls rs rs rs rs rs rs rs rs rs rs'
-    'ls ls rs rs rs rs rs rs rs rs rs rs'
-    'ls ls rs rs rs rs rs rs rs rs rs rs'
-    'ls ls rs rs rs rs rs rs rs rs rs rs'
-    'ls ls rs rs rs rs rs rs rs rs rs rs'
-    'ls ls rs rs rs rs rs rs rs rs rs rs'
-    'ls ls rs rs rs rs rs rs rs rs rs rs'
-    'ls ls rs rs rs rs rs rs rs rs rs rs'
+    'ls rs rs rs rs rs rs rs rs rs rs rs'
+    'ls rs rs rs rs rs rs rs rs rs rs rs'
+    'ls rs rs rs rs rs rs rs rs rs rs rs'
+    'ls rs rs rs rs rs rs rs rs rs rs rs'
+    'ls rs rs rs rs rs rs rs rs rs rs rs'
+    'ls rs rs rs rs rs rs rs rs rs rs rs'
+    'ls rs rs rs rs rs rs rs rs rs rs rs'
+    'ls rs rs rs rs rs rs rs rs rs rs rs'
+    'ls rs rs rs rs rs rs rs rs rs rs rs'
 
 }
