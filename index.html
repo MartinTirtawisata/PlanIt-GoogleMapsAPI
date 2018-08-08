@@ -18,26 +18,26 @@
         <main id="left-panel" class="left-side list">
             <input id="initial-input" class="controls" type="text">
             <input id="destination-input" class="controls" type="text">
+            <button class="add-waypoint">Add Waypoint</button>
             <div id="mode-selector" class="controls">
-                <input type="radio" name="type" id="changemode-walking" checked="checked">
+                <input type="radio" name="type" id="changemode-walking">
                 <label for="changemode-walking">Walking</label>
             
                 <input type="radio" name="type" id="changemode-transit">
                 <label for="changemode-transit">Transit</label>
             
-                <input type="radio" name="type" id="changemode-driving">
+                <input type="radio" name="type" id="changemode-driving" checked>
                 <label for="changemode-driving">Driving</label>
             </div>
             <div class="js-map-leg-info"></div>
-            <div class="js-add-input">
-                <input id="waypoint-input" class="controls" type="text">
-            </div>
+            <div class="js-add-input"></div>
         </main>
         <section class="right-side gmap">
             <div id="map" class="gmap"></div>
         </section>
     </div>
-    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/api.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCbKjvR3xSU6ODz37cp9YmRgb3pYMH0i8&libraries=places&callback=initMap"
     async defer></script>
 </body>
