@@ -13,23 +13,12 @@ function AutocompleteDirectionHandler(map){
     this.initialPlaceId = null;
     this.destinationPlaceId = null;
     this.waypointArray = [];
-    this.waypointPlaceId_0 = null;
-    this.waypointPlaceId_1 = null;
-    this.waypointPlaceId_2 = null;
-    this.waypointPlaceId_3 = null;
-    this.waypointPlaceId_4 = null;
-    this.waypointPlaceId_5 = null;
+
     this.travelMode = 'DRIVING';
 
     //Get the value of the waypoint inputs
     let initialInput = document.getElementById('initial-input');
     let destinationInput = document.getElementById('destination-input');
-    let waypointInput_0 = document.getElementById(`waypoint-input-0`);
-    let waypointInput_1 = document.getElementById('waypoint-input-1');
-    let waypointInput_2 = document.getElementById('waypoint-input-2');
-    let waypointInput_3 = document.getElementById('waypoint-input-3');
-    let waypointInput_4 = document.getElementById('waypoint-input-4');
-    let waypointInput_5 = document.getElementById('waypoint-input-5');
 
     //service that computes directions between two or more places. 
     this.directionsService = new google.maps.DirectionsService;
@@ -42,12 +31,6 @@ function AutocompleteDirectionHandler(map){
     //Creating new objects from Google Map API
     let initialAutocomplete = new google.maps.places.Autocomplete(initialInput, {placeIdOnly: true});
     let destinationAutocomplete = new google.maps.places.Autocomplete(destinationInput, {placeIdOnly: true});
-    let waypointAutocomplete_0 = new google.maps.places.Autocomplete(waypointInput_0, {placeIdOnly: true});
-    let waypointAutocomplete_1 = new google.maps.places.Autocomplete(waypointInput_1, {placeIdOnly: true});
-    let waypointAutocomplete_2 = new google.maps.places.Autocomplete(waypointInput_2, {placeIdOnly: true});
-    let waypointAutocomplete_3 = new google.maps.places.Autocomplete(waypointInput_3, {placeIdOnly: true});
-    let waypointAutocomplete_4 = new google.maps.places.Autocomplete(waypointInput_4, {placeIdOnly: true});
-    let waypointAutocomplete_5 = new google.maps.places.Autocomplete(waypointInput_5, {placeIdOnly: true});
 
     this.setupModeChange('changemode-walking', 'WALKING');
     this.setupModeChange('changemode-transit', 'TRANSIT');
@@ -55,13 +38,7 @@ function AutocompleteDirectionHandler(map){
 
     this.setupPlaceChangedListener(initialAutocomplete, "INIT");
     this.setupPlaceChangedListener(destinationAutocomplete, "DEST");
-    this.setupPlaceChangedListener(waypointAutocomplete_0, "WYPT_0");
-    this.setupPlaceChangedListener(waypointAutocomplete_1, "WYPT_1");
-    this.setupPlaceChangedListener(waypointAutocomplete_2, "WYPT_2")
-    this.setupPlaceChangedListener(waypointAutocomplete_3, "WYPT_3")
-    this.setupPlaceChangedListener(waypointAutocomplete_4, "WYPT_4")
-    this.setupPlaceChangedListener(waypointAutocomplete_5, "WYPT_5")
-
+   
     this.setupDirectionsChangeListener();
 }
 
@@ -86,20 +63,8 @@ AutocompleteDirectionHandler.prototype.setupPlaceChangedListener = function(auto
 
         if (mode === "INIT"){
             me.initialPlaceId = newPlace.place_id;
-        } else if(mode === "DEST"){
+        } else {
             me.destinationPlaceId = newPlace.place_id;
-        } else if(mode === "WYPT_0"){
-            me.waypointPlaceId_0 = newPlace.place_id;
-        } else if(mode === "WYPT_1"){
-            me.waypointPlaceId_1 = newPlace.place_id;
-        } else if(mode === "WYPT_2"){
-            me.waypointPlaceId_2 = newPlace.place_id;
-        } else if(mode === "WYPT_3"){
-            me.waypointPlaceId_3 = newPlace.place_id;
-        } else if(mode === "WYPT_4"){
-            me.waypointPlaceId_4 = newPlace.place_id;
-        } else if(mode === "WYPT_5"){
-            me.waypointPlaceId_5 = newPlace.place_id;
         }
         me.displayRoute();
     }); 
@@ -115,20 +80,7 @@ AutocompleteDirectionHandler.prototype.displayRoute = function(){
             location: {placeId: this.destinationPlaceId},
             stopover: true
         });
-        
-        if (this.waypointPlaceId_5){
-            this.destinationPlaceId = this.waypointPlaceId_5
-        } else if (this.waypointPlaceId_4){
-            this.destinationPlaceId = this.waypointPlaceId_4
-        } else if (this.waypointPlaceId_3){
-            this.destinationPlaceId = this.waypointPlaceId_3
-        } else if (this.waypointPlaceId_2){
-            this.destinationPlaceId = this.waypointPlaceId_2
-        } else if (this.waypointPlaceId_1){
-            this.destinationPlaceId = this.waypointPlaceId_1
-        } else if (this.waypointPlaceId_0){
-            this.destinationPlaceId = this.waypointPlaceId_0;    
-        }
+
     };
 
     let me = this;
