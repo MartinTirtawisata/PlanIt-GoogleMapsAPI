@@ -5,26 +5,22 @@
     /* float: right; */
 }
 
-.waypoint-input-0{
-    display: none;
+#place-input {
+    width: 100%;
+    height: 30px;
 }
 
-.waypoint-input-1{
-    display: none;
+#place-input:focus {
+    background-color: whitesmoke;
 }
 
-.waypoint-input-2{
-    display: none;
+.route-info{
+    padding-top: 10px;
+    width: 100%;
+
+    border: black 2px solid;
 }
 
-.waypoint-input-3{
-    display: none;
-}
-
-.waypoint-input-4{
-    display: none;
-}
-
-.waypoint-input-5{
-    display: none;
+.route-info:hover{
+    background-color: whitesmoke;
 }

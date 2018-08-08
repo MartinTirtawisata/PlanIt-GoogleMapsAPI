@@ -1,3 +1,5 @@
-function renderUserInfo(routeDistance, routeDuration, index){
-    $('.js-map-leg-info').html(`<div class="index-info-${index}"<p>Distance: ${routeDistance[index]} Duration: ${routeDuration[index]} Mode: ${this.travelMode}</p>`)
+function renderUserInfo(routeInfo, index){
+    
+    $('.js-map-leg-info').append(`<div class="route-info"<p>From: ${routeInfo[index].start_address} to ${routeInfo[index].end_address} Distance: ${routeInfo[index].routeDistance} Duration: ${routeInfo[index].routeDuration} Mode: ${routeInfo[index].travelMode}</p>`)
+    
 }

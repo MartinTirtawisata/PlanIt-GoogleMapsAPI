@@ -10,16 +10,16 @@ function initMap() {
 
 function AutocompleteDirectionHandler(map){
     this.map = map;
-    this.initialPlaceId = null;
-    this.destinationPlaceId = null;
-    this.waypointArray = [];
-
-    this.travelMode = 'DRIVING';
+    this.placeId = null;
+    this.placeIdArray = [];
+    this.wyptIndex = 0;
+    this.waypointsArray = [];
+    this.travelMode = 'DRIVING'
+    this.routeInformation = [];
+    this.routeIndex = 0;
 
     //Get the value of the waypoint inputs
-    let initialInput = document.getElementById('initial-input');
-    let destinationInput = document.getElementById('destination-input');
-
+    let placeInput = document.getElementById('place-input');
     //service that computes directions between two or more places. 
     this.directionsService = new google.maps.DirectionsService;
     //Direction Renderer = renders the directions obtained from the DirectionService. 
@@ -27,19 +27,21 @@ function AutocompleteDirectionHandler(map){
         draggable: true,
         map: map,
     });
-
     //Creating new objects from Google Map API
-    let initialAutocomplete = new google.maps.places.Autocomplete(initialInput, {placeIdOnly: true});
-    let destinationAutocomplete = new google.maps.places.Autocomplete(destinationInput, {placeIdOnly: true});
+    let placeAutocomplete = new google.maps.places.Autocomplete(placeInput, {placeIdOnly: true});
+   
 
     this.setupModeChange('changemode-walking', 'WALKING');
     this.setupModeChange('changemode-transit', 'TRANSIT');
     this.setupModeChange('changemode-driving', 'DRIVING');
 
-    this.setupPlaceChangedListener(initialAutocomplete, "INIT");
-    this.setupPlaceChangedListener(destinationAutocomplete, "DEST");
+    this.setupPlaceChangedListener(placeAutocomplete, "ORIG");
+    // this.setupPlaceChangedListener(destinationAutocomplete, "DEST");
    
     this.setupDirectionsChangeListener();
+
+    // this.placeDetail = new google.maps.places.PlacesService(map);
+
 }
 
 AutocompleteDirectionHandler.prototype.setupModeChange = function(radio, modeSelect){
@@ -56,74 +58,97 @@ AutocompleteDirectionHandler.prototype.setupPlaceChangedListener = function(auto
     autocompleteSettings.bindTo('bounds', this.map);
     autocompleteSettings.addListener('place_changed', function(){
         let newPlace = autocompleteSettings.getPlace();
+        // console.log(newPlace);
         if (!newPlace.place_id) {
             window.alert("Incorrect input");
             return;
         }
 
-        if (mode === "INIT"){
-            me.initialPlaceId = newPlace.place_id;
-        } else {
-            me.destinationPlaceId = newPlace.place_id;
+        if (mode === "ORIG"){
+            me.placeId = newPlace.place_id;
+            $('#place-input').val("");
         }
+
         me.displayRoute();
     }); 
 };
 
 AutocompleteDirectionHandler.prototype.displayRoute = function(){
-    if (!this.initialPlaceId || !this.destinationPlaceId){
+    if (!this.placeId){
         return;
     }
 
-    if (this.waypointPlaceId_0){
-        this.waypointArray.push({
-            location: {placeId: this.destinationPlaceId},
+    if (this.placeId){
+        this.placeIdArray.push({
+            placeId: this.placeId
+        });
+    
+        // console.log(this.placeIdArray[0]);
+        // console.log(this.placeIdArray[this.placeIdArray.length-1]);
+        // console.log(this.placeIdArray);
+    }
+
+    if (this.placeIdArray.length >= 3){
+
+        let wypts = this.placeIdArray.slice(1,-1)
+        // console.log(wypts);
+        this.waypointsArray.push({
+            location: wypts[this.wyptIndex],
             stopover: true
         });
-
-    };
+        this.wyptIndex++;
+    
+        // console.log(this.waypointsArray);
+    }
 
     let me = this;
     console.log("rendering displayRoute");
 
     directionRequest = {
-        origin: {'placeId': this.initialPlaceId},
-        destination: {'placeId': this.destinationPlaceId},
+        origin: this.placeIdArray[0],
+        destination: this.placeIdArray[this.placeIdArray.length-1],
         travelMode: this.travelMode,
-        waypoints: this.waypointArray
+        waypoints: this.waypointsArray
     }
 
-    this.directionsService.route(directionRequest, function(response, status){
-        if(status === 'OK'){
-            me.directionsRender.setDirections(response);
-        } else {
-            window.alert('Direction request failed')
-        }
-    });
+    if (this.placeIdArray.length >= 2){
+        this.directionsService.route(directionRequest, function(response, status){
+            if(status === 'OK'){
+                me.directionsRender.setDirections(response);
+            } else {
+                window.alert('Direction request failed')
+            }
+        });
+    };
 };
 
 AutocompleteDirectionHandler.prototype.setupDirectionsChangeListener = function(){
     let me = this;
     this.directionsRender.addListener('directions_changed', function(){
         me.computeTotalDistance(me.directionsRender.getDirections());
-
-    })
-}
+    });
+};
 
 AutocompleteDirectionHandler.prototype.computeTotalDistance = function(result){
     console.log("calculating route distance")
     let total = 0
     let myRoute = result.routes[0];
     console.log(myRoute);
-    let routeDistance = [];
-    let routeDuration = [];
-    let i = 0;
 
-    routeDistance.push(myRoute.legs[i].distance.text);
-    routeDuration.push(myRoute.legs[i].duration.text);
-    console.log(routeDistance, routeDuration, i);
-    console.log(this.travelMode);
-    renderUserInfo(routeDistance, routeDuration, i);
+    this.routeInformation.push({
+        start_address: myRoute.legs[this.routeIndex].start_address,
+        end_address: myRoute.legs[this.routeIndex].end_address,
+        routeDistance: myRoute.legs[this.routeIndex].distance.text,
+        routeDuration: myRoute.legs[this.routeIndex].duration.text,
+        travelMode: this.travelMode
+    })
+    renderUserInfo(this.routeInformation, this.routeIndex);
+    this.routeIndex++;
 }
+
+// AutocompleteDirectionHandler.prototype.getPlaceDetail = function(place){
+//     console.log(place);
+// };
+
 
 
