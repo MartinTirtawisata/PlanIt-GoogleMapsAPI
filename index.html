@@ -8,28 +8,33 @@
     <link rel="stylesheet" href="./css/css-grids.css" type="text/css">
     <link rel="stylesheet" href="./css/float-grid.css" type="text/css">
     <link rel="stylesheet" href="./css/main.css" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Titillium+Web" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
     <div class="grid-container">
-        <header class="header">
-            <h1>PlanIt</h1>
-        </header>
         <main id="left-panel" class="left-side list">
-            <input id="place-input" class="controls" type="text">
-            <!-- <input id="destination-input" class="controls" type="text"> -->
-            <div id="mode-selector" class="controls">
-                <input type="radio" name="type" id="changemode-walking">
-                <label for="changemode-walking">Walking</label>
-            
-                <input type="radio" name="type" id="changemode-transit">
-                <label for="changemode-transit">Transit</label>
-            
-                <input type="radio" name="type" id="changemode-driving" checked>
-                <label for="changemode-driving">Driving</label>
+            <header class="header">
+                <h1>PlanIt</h1>
+            </header>
+            <div class="input-container">
+                <label class="place-label" for="place-input">Please Enter <span class="start-title">A Start</span> Location</label>
+                <input id="place-input" class="controls" type="text">
+                <div id="mode-selector" class="controls">
+                    <input type="radio" name="type" id="changemode-walking">
+                    <label class="radio-button" for="changemode-walking"><i class="fas fa-walking"></i></label>
+                
+                    <input type="radio" name="type" id="changemode-transit">
+                    <label class="radio-button" for="changemode-transit"><i class="fas fa-train"></i></i></label>
+                
+                    <input type="radio" name="type" id="changemode-driving" checked>
+                    <label class="radio-button" for="changemode-driving"><i class="fas fa-car"></i></label>
+                </div>
             </div>
             <div class="js-map-leg-info"></div>
             <div class="js-add-input"></div>
+
         </main>
         <section class="right-side gmap">
             <div id="map" class="gmap"></div>
