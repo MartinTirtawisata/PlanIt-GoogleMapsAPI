@@ -19,6 +19,7 @@ function AutocompleteDirectionHandler(map){
     this.routeIndex = 0;
     this.placeNameArray = [];
     this.placeIndex = 0;
+    // this.iconHTML = null;
 
     //Get the value of the waypoint inputs
     let placeInput = document.getElementById('place-input');
@@ -48,6 +49,15 @@ AutocompleteDirectionHandler.prototype.setupModeChange = function(radio, modeSel
     let radioButton = document.getElementById(radio);
     radioButton.addEventListener('click', function(){
         me.travelMode = modeSelect
+
+        if (modeSelect == 'WALKING'){
+            $('.icon').html(`<i class="fas fa-walking"></i>`)
+        } else if(modeSelect == 'DRIVING'){
+            $('.icon').html(`<i class="fas fa-car"></i>`)
+        } else if(modeSelect == 'TRANSIT'){
+            $('.icon').html(`<i class="fas fa-transit"></i>`)
+        }
+
         me.displayRoute();
     });
 };
@@ -67,6 +77,12 @@ AutocompleteDirectionHandler.prototype.setupPlaceChangedListener = function(auto
         if (mode === "ORIG"){
             me.placeId = newPlace.place_id;
             $('#place-input').val("");
+
+            if ($('.start-title').html('A Start')){
+                $('.start-title').html('An End')
+            }
+           
+                
         }
         me.getPlaceDetail();
         me.displayRoute(); 
