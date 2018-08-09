@@ -19,7 +19,6 @@ function AutocompleteDirectionHandler(map){
     this.routeIndex = 0;
     this.placeNameArray = [];
     this.placeIndex = 0;
-    // this.iconHTML = null;
 
     //Get the value of the waypoint inputs
     let placeInput = document.getElementById('place-input');
@@ -51,13 +50,12 @@ AutocompleteDirectionHandler.prototype.setupModeChange = function(radio, modeSel
         me.travelMode = modeSelect
 
         if (modeSelect == 'WALKING'){
-            $('.icon').html(`<i class="fas fa-walking"></i>`)
+            $('.icon').html(`<i class="fas fa-walking"></i>`);
         } else if(modeSelect == 'DRIVING'){
-            $('.icon').html(`<i class="fas fa-car"></i>`)
+            $('.icon').html(`<i class="fas fa-car"></i>`);
         } else if(modeSelect == 'TRANSIT'){
-            $('.icon').html(`<i class="fas fa-transit"></i>`)
+            $('.icon').html(`<i class="fas fa-train"></i>`);
         }
-
         me.displayRoute();
     });
 };
@@ -81,30 +79,21 @@ AutocompleteDirectionHandler.prototype.setupPlaceChangedListener = function(auto
             if ($('.start-title').html('A Start')){
                 $('.start-title').html('An End')
             }
-           
-                
         }
         me.getPlaceDetail();
-        me.displayRoute(); 
+        me.setLocationArray();
     }); 
 };
 
-AutocompleteDirectionHandler.prototype.displayRoute = function(){
-    console.log('4')
-    if (!this.placeId){
-        return;
-    }
-
+AutocompleteDirectionHandler.prototype.setLocationArray = function(){
     if (this.placeId){
         this.placeIdArray.push({
             placeId: this.placeId
         });
-    
         // console.log(this.placeIdArray[0]);
         // console.log(this.placeIdArray[this.placeIdArray.length-1]);
         // console.log(this.placeIdArray);
     }
-
     if (this.placeIdArray.length >= 3){
 
         let wypts = this.placeIdArray.slice(1,-1)
@@ -116,6 +105,15 @@ AutocompleteDirectionHandler.prototype.displayRoute = function(){
         this.wyptIndex++;
     
         // console.log(this.waypointsArray);
+        
+    }
+    this.displayRoute();
+}
+
+AutocompleteDirectionHandler.prototype.displayRoute = function(){
+    console.log('4')
+    if (!this.placeId){
+        return;
     }
 
     let me = this;
