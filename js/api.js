@@ -36,7 +36,10 @@ function AutocompleteDirectionHandler(map){
     //Creating new objects from Google Map API
     let placeAutocomplete = new google.maps.places.Autocomplete(placeInput);
 
-    this.marker = new google.maps.Marker(map);
+    this.marker = new google.maps.Marker({
+        map: map,
+        anchorPoint: new google.maps.Point(0,0)
+    });
    
     this.setupModeChange('changemode-walking', 'WALKING');
     this.setupModeChange('changemode-transit', 'TRANSIT');
@@ -82,7 +85,7 @@ AutocompleteDirectionHandler.prototype.setupPlaceChangedListener = function(auto
         
         me.getPlaceDetail();
         me.setLocationArray();
-        me.setMarker(getCenter, getPlace);
+        me.setMarker(getPlace);
         me.setIconType();
         me.displayRoute();
     }); 
@@ -103,6 +106,8 @@ AutocompleteDirectionHandler.prototype.getPlaceDetail = function(){
 }
 
 AutocompleteDirectionHandler.prototype.setLocationArray = function(){
+
+
     if (this.placeId){
         console.log('4')
         this.placeIdArray.push({
@@ -112,33 +117,36 @@ AutocompleteDirectionHandler.prototype.setLocationArray = function(){
         // console.log(this.placeIdArray[this.placeIdArray.length-1]);
         // console.log(this.placeIdArray);
     }
-    if (this.placeIdArray.length >= 3){
+    if (this.placeIdArray.length >= 3 && this.travelMode != "TRANSIT"){
 
         let wypts = this.placeIdArray.slice(1,-1)
-        // console.log(wypts);
+        console.log(wypts);
         this.waypointsArray.push({
             location: wypts[this.wyptIndex],
             stopover: true
         });
         this.wyptIndex++;
     } 
+    if (this.placeIdArray.length == 2){
+        if(this.travelMode == 'TRANSIT') {
+            alert("Transit mode can only have 2 destinations max!")
+        }    
+    }
+    
 }
 
-AutocompleteDirectionHandler.prototype.setMarker = function(center, place){
+AutocompleteDirectionHandler.prototype.setMarker = function(place){
     if (this.placeIdArray.length == 1){
         console.log('setting the markers')
         this.marker.setVisible(false);
-        console.log(center);
-        console.log(place.geometry.location);
-
         if (place.geometry.viewport){
             this.map.fitBounds(place.geometry.viewport)
         } else {
-            this.map.setCenter(bounds);
-            this.map.setZoom(15);
+        this.map.setCenter(place.geometry.location);
+        this.map.setZoom(14);
         }
 
-        this.marker.setPosition(bounds);
+        this.marker.setPosition(place.geometry.location);
         this.marker.setVisible(true);
     }
 }
@@ -194,7 +202,10 @@ AutocompleteDirectionHandler.prototype.setupDirectionsChangeListener = function(
 AutocompleteDirectionHandler.prototype.computeTotalDistance = function(result){
     console.log('6')
     console.log("calculating route distance")
-    let total = 0
+    this.marker.setVisible(false);
+
+    let totalDuration = 0
+    let totalDistance = 0
     let myRoute = result.routes[0];
     console.log(myRoute);
 
@@ -211,10 +222,20 @@ AutocompleteDirectionHandler.prototype.computeTotalDistance = function(result){
         });
     }
 
-  
+    for (i=0; i<myRoute.legs.length; i++){
+        totalDuration += myRoute.legs[i].duration.value
+        totalDistance += myRoute.legs[i].distance.value
+    }
+
+    totalDistance = ((totalDistance/60)/60);
+    totalDuration = (totalDuration/60);
+
+    distance = totalDistance.toFixed(2);
+    duration = totalDuration.toFixed(2);
 
     console.log(this.routeInformation);
     renderUserInfo(this.routeInformation, this.routeIndex);
+    displayTotal(distance, duration)
     deleteRouteIndex(this.routeIndex);
     this.routeIndex++;
     this.placeIndex++;
