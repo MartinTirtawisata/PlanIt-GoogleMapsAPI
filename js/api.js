@@ -85,6 +85,7 @@ AutocompleteDirectionHandler.prototype.getPlaceDetail = function(){
         }, function(place, status){
             if (status == google.maps.places.PlacesServiceStatus.OK){
                 me.placeNameArray.push(place.name)
+                console.log(me.placeNameArray);
             }
         });
     }
@@ -105,6 +106,7 @@ AutocompleteDirectionHandler.prototype.setLocationArray = function(){
         });
         this.wyptIndex++;
     } 
+    console.log(this.waypointsArray);
     if (this.placeIdArray.length == 2){
         if(this.travelMode == 'TRANSIT') {
             alert("Transit mode can only have 2 destinations max!")
@@ -118,8 +120,8 @@ AutocompleteDirectionHandler.prototype.setMarker = function(place){
         if (place.geometry.viewport){
             this.map.fitBounds(place.geometry.viewport)
         } else {
-        this.map.setCenter(place.geometry.location);
-        this.map.setZoom(14);
+            this.map.setCenter(place.geometry.location);
+            this.map.setZoom(16);
         }
         this.marker.setPosition(place.geometry.location);
         this.marker.setVisible(true);
@@ -135,8 +137,6 @@ AutocompleteDirectionHandler.prototype.setIconType = function(){
         this.icon =`<i class="fas fa-train"></i>`;
     }
 }
-
-
 
 AutocompleteDirectionHandler.prototype.displayRoute = function(){
     if (!this.placeId){
@@ -187,6 +187,8 @@ AutocompleteDirectionHandler.prototype.computeTotalDistance = function(result){
             icon: this.icon
         });
     }
+    console.log(this.routeInformation);
+    console.log(this.routeIndex);
 
     for (i=0; i<myRoute.legs.length; i++){
         totalDuration += myRoute.legs[i].duration.value

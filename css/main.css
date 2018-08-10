@@ -58,9 +58,6 @@ header > h1 {
     width: 100%;
     font-size: 18px;
     position: relative;
-    
-
-    /* border: black 2px solid; */
 }
 
 .route-info:hover{
@@ -73,12 +70,7 @@ header > h1 {
 }
 
 .input-container{
-    /* border: 1px dotted grey; */
     padding: 5px;
-}
-
-.start-left{
-   /* font-weight: bold; */
 }
 
 .start-right{
@@ -98,7 +90,7 @@ header > h1 {
 }
 
 .delete-button{
-    background: #1269F4;
+    background:#1269F4;
     color: white;
     font-size: 16px;
     border: none;
@@ -113,11 +105,5 @@ header > h1 {
 
 .delete-button:active{
     color: grey;
-
 }
-
-.input-fluid{
-    display: none;
-}
-
 
