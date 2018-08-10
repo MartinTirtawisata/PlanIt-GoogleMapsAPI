@@ -26,6 +26,8 @@ function deleteRouteIndex(index){
     });
 }
 
+$(displayInputInfo);
+
 
 
 

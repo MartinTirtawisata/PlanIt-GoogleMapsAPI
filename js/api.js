@@ -85,7 +85,7 @@ AutocompleteDirectionHandler.prototype.getPlaceDetail = function(){
         }, function(place, status){
             if (status == google.maps.places.PlacesServiceStatus.OK){
                 me.placeNameArray.push(place.name)
-                console.log(me.placeNameArray);
+        
             }
         });
     }
@@ -106,7 +106,6 @@ AutocompleteDirectionHandler.prototype.setLocationArray = function(){
         });
         this.wyptIndex++;
     } 
-    console.log(this.waypointsArray);
     if (this.placeIdArray.length == 2){
         if(this.travelMode == 'TRANSIT') {
             alert("Transit mode can only have 2 destinations max!")
@@ -187,8 +186,6 @@ AutocompleteDirectionHandler.prototype.computeTotalDistance = function(result){
             icon: this.icon
         });
     }
-    console.log(this.routeInformation);
-    console.log(this.routeIndex);
 
     for (i=0; i<myRoute.legs.length; i++){
         totalDuration += myRoute.legs[i].duration.value
@@ -205,6 +202,3 @@ AutocompleteDirectionHandler.prototype.computeTotalDistance = function(result){
     this.routeIndex++;
     this.placeIndex++;
 }
-
-
-
