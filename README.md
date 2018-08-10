@@ -5,7 +5,9 @@ This is an app that utilizes Google Maps to enable the user to plan trips. The a
 https://martintirtawisata.github.io/PlanIt-GoogleMapsAPI/
 
 ## Screenshots
+Rendering the map
 ![](img/maps.png)
+Rendering the map with input directions
 ![](img/maps-direction.png)
 ## Technology
 HTML/CSS/JavaScript/jQuery/GoogleMapsAPI
