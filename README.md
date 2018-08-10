@@ -14,3 +14,7 @@ HTML/CSS/JavaScript/jQuery/GoogleMapsAPI
 
 ## Authors
 Martin Tirtawisata
+
+## Limitations
+1) At times, the map will not render the route info because of the inconsistent speed of retrieving the data. Hence, if the route information isn't displaying, simply restart the browser. 
+2) When removing the route information from the list, the markers in the map are not removed. This is an issue that will need more time to figure out. 
