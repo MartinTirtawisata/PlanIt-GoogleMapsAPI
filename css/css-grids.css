@@ -1,34 +1,49 @@
 
-.left-side {
-    grid-area: ls;
-    max-width:350px;
-    /* padding-right: 0; */
-
-    /* border: 2px solid red; */
+.panel {
+    grid-area: p;
+    min-width: 350px;
+    /* mapxx-width: 400 */
 }
 
-.right-side {
-    grid-area: rs;
+.map {
+    grid-area: m;
     padding-left: 0;
+    width: 1500px;
+    max-width: 1500px;
+    min-width: 400px;
 
-    /* border: 2px solid black; */
 }
 
-/* 12 width * 8 height */
 .grid-container{
     display: grid;
     height: 100vh;
     width: 100vw;
-    /* grid-auto-rows: minmax(100px, auto); */
     grid-template-areas:
-    'ls rs rs rs rs rs rs rs rs rs rs rs'
-    'ls rs rs rs rs rs rs rs rs rs rs rs'
-    'ls rs rs rs rs rs rs rs rs rs rs rs'
-    'ls rs rs rs rs rs rs rs rs rs rs rs'
-    'ls rs rs rs rs rs rs rs rs rs rs rs'
-    'ls rs rs rs rs rs rs rs rs rs rs rs'
-    'ls rs rs rs rs rs rs rs rs rs rs rs'
-    'ls rs rs rs rs rs rs rs rs rs rs rs'
-    'ls rs rs rs rs rs rs rs rs rs rs rs'
+    'p m m m m'
+    'p m m m m'
+    'p m m m m'
+    'p m m m m'
+    'p m m m m'
+}
 
+@media (max-width: 640px){
+    .panel{
+        grid-area: p;
+        width: 100%;
+        max-height: 350px;
+        overflow: auto;
+    }
+
+    .map{
+        grid-area: m;
+        width: 100%;
+        min-height: 200px;
+    }
+
+
+    .grid-container{
+        grid-template-areas:
+        'm m'
+        'p p'
+    }
 }

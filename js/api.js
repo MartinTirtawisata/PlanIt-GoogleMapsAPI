@@ -2,7 +2,7 @@ function initMap() {
     let map = new google.maps.Map(document.getElementById('map'), {
         mapTypeControl: false,
         center: {lat: 34.1478, lng: -118.1445},
-        zoom: 13
+        zoom: 15
     });
 
     new AutocompleteDirectionHandler(map);
@@ -14,11 +14,12 @@ function AutocompleteDirectionHandler(map){
     this.placeIdArray = [];
     this.wyptIndex = 0;
     this.waypointsArray = [];
-    this.travelMode = 'DRIVING'
+    this.travelMode = 'DRIVING';
     this.routeInformation = [];
     this.routeIndex = 0;
     this.placeNameArray = [];
     this.placeIndex = 0;
+    this.icon = null;
 
     //Get the value of the waypoint inputs
     let placeInput = document.getElementById('place-input');
@@ -33,7 +34,12 @@ function AutocompleteDirectionHandler(map){
     this.placeService = new google.maps.places.PlacesService(map);
 
     //Creating new objects from Google Map API
-    let placeAutocomplete = new google.maps.places.Autocomplete(placeInput, {placeIdOnly: true});
+    let placeAutocomplete = new google.maps.places.Autocomplete(placeInput);
+
+    this.marker = new google.maps.Marker({
+        map: map,
+        anchorPoint: new google.maps.Point(0,0)
+    });
    
     this.setupModeChange('changemode-walking', 'WALKING');
     this.setupModeChange('changemode-transit', 'TRANSIT');
@@ -49,13 +55,6 @@ AutocompleteDirectionHandler.prototype.setupModeChange = function(radio, modeSel
     radioButton.addEventListener('click', function(){
         me.travelMode = modeSelect
 
-        if (modeSelect == 'WALKING'){
-            $('.icon').html(`<i class="fas fa-walking"></i>`);
-        } else if(modeSelect == 'DRIVING'){
-            $('.icon').html(`<i class="fas fa-car"></i>`);
-        } else if(modeSelect == 'TRANSIT'){
-            $('.icon').html(`<i class="fas fa-train"></i>`);
-        }
         me.displayRoute();
     });
 };
@@ -64,29 +63,53 @@ AutocompleteDirectionHandler.prototype.setupPlaceChangedListener = function(auto
     console.log('1')
     let me = this;
     autocompleteSettings.bindTo('bounds', this.map);
+    autocompleteSettings.setFields(['geometry','name','place_id' ])
     autocompleteSettings.addListener('place_changed', function(){
-        let newPlace = autocompleteSettings.getPlace();
-        // console.log(newPlace);
-        if (!newPlace.place_id) {
+    
+        let getPlace = autocompleteSettings.getPlace();
+        console.log(getPlace);
+        let getCenter = me.map.getCenter();
+        if (!getPlace.place_id) {
             window.alert("Incorrect input");
             return;
         }
 
         if (mode === "ORIG"){
-            me.placeId = newPlace.place_id;
+            me.placeId = getPlace.place_id;
             $('#place-input').val("");
 
             if ($('.start-title').html('A Start')){
                 $('.start-title').html('An End')
             }
         }
+        
         me.getPlaceDetail();
         me.setLocationArray();
+        me.setMarker(getPlace);
+        me.setIconType();
+        me.displayRoute();
     }); 
 };
 
-AutocompleteDirectionHandler.prototype.setLocationArray = function(){
+AutocompleteDirectionHandler.prototype.getPlaceDetail = function(){
+    console.log('3')
+    let me = this;
     if (this.placeId){
+        this.placeService.getDetails({
+            placeId: this.placeId
+        }, function(place, status){
+            if (status == google.maps.places.PlacesServiceStatus.OK){
+                me.placeNameArray.push(place.name)
+            }
+        });
+    }
+}
+
+AutocompleteDirectionHandler.prototype.setLocationArray = function(){
+
+
+    if (this.placeId){
+        console.log('4')
         this.placeIdArray.push({
             placeId: this.placeId
         });
@@ -94,24 +117,54 @@ AutocompleteDirectionHandler.prototype.setLocationArray = function(){
         // console.log(this.placeIdArray[this.placeIdArray.length-1]);
         // console.log(this.placeIdArray);
     }
-    if (this.placeIdArray.length >= 3){
+    if (this.placeIdArray.length >= 3 && this.travelMode != "TRANSIT"){
 
         let wypts = this.placeIdArray.slice(1,-1)
-        // console.log(wypts);
+        console.log(wypts);
         this.waypointsArray.push({
             location: wypts[this.wyptIndex],
             stopover: true
         });
         this.wyptIndex++;
-    
-        // console.log(this.waypointsArray);
-        
+    } 
+    if (this.placeIdArray.length == 2){
+        if(this.travelMode == 'TRANSIT') {
+            alert("Transit mode can only have 2 destinations max!")
+        }    
     }
-    this.displayRoute();
+    
 }
 
+AutocompleteDirectionHandler.prototype.setMarker = function(place){
+    if (this.placeIdArray.length == 1){
+        console.log('setting the markers')
+        this.marker.setVisible(false);
+        if (place.geometry.viewport){
+            this.map.fitBounds(place.geometry.viewport)
+        } else {
+        this.map.setCenter(place.geometry.location);
+        this.map.setZoom(14);
+        }
+
+        this.marker.setPosition(place.geometry.location);
+        this.marker.setVisible(true);
+    }
+}
+
+AutocompleteDirectionHandler.prototype.setIconType = function(){
+
+    if (this.travelMode == 'WALKING'){
+        this.icon =`<i class="fas fa-walking"></i>`;
+    } else if(this.travelMode == 'DRIVING'){
+        this.icon =`<i class="fas fa-car"></i>`;
+    } else if(this.travelMode == 'TRANSIT'){
+        this.icon =`<i class="fas fa-train"></i>`;
+    }
+}
+
+
+
 AutocompleteDirectionHandler.prototype.displayRoute = function(){
-    console.log('4')
     if (!this.placeId){
         return;
     }
@@ -127,6 +180,7 @@ AutocompleteDirectionHandler.prototype.displayRoute = function(){
     }
 
     if (this.placeIdArray.length >= 2){
+        $(disableInput());
         this.directionsService.route(directionRequest, function(response, status){
             if(status === 'OK'){
                 me.directionsRender.setDirections(response);
@@ -148,9 +202,12 @@ AutocompleteDirectionHandler.prototype.setupDirectionsChangeListener = function(
 AutocompleteDirectionHandler.prototype.computeTotalDistance = function(result){
     console.log('6')
     console.log("calculating route distance")
-    let total = 0
+    this.marker.setVisible(false);
+
+    let totalDuration = 0
+    let totalDistance = 0
     let myRoute = result.routes[0];
-    // console.log(myRoute);
+    console.log(myRoute);
 
     if (this.placeNameArray[1]){
         this.routeInformation.push({
@@ -160,31 +217,29 @@ AutocompleteDirectionHandler.prototype.computeTotalDistance = function(result){
             end_name: this.placeNameArray[this.placeIndex + 1],
             routeDistance: myRoute.legs[this.routeIndex].distance.text,
             routeDuration: myRoute.legs[this.routeIndex].duration.text,
-            travelMode: this.travelMode
+            travelMode: this.travelMode,
+            icon: this.icon
         });
     }
 
-  
+    for (i=0; i<myRoute.legs.length; i++){
+        totalDuration += myRoute.legs[i].duration.value
+        totalDistance += myRoute.legs[i].distance.value
+    }
+
+    totalDistance = ((totalDistance/60)/60);
+    totalDuration = (totalDuration/60);
+
+    distance = totalDistance.toFixed(2);
+    duration = totalDuration.toFixed(2);
 
     console.log(this.routeInformation);
     renderUserInfo(this.routeInformation, this.routeIndex);
+    displayTotal(distance, duration)
+    deleteRouteIndex(this.routeIndex);
     this.routeIndex++;
     this.placeIndex++;
 }
 
-AutocompleteDirectionHandler.prototype.getPlaceDetail = function(){
-    console.log('3')
-    let me = this;
-    if (this.placeId){
-        this.placeService.getDetails({
-            placeId: this.placeId
-        }, function(place, status){
-            if (status == google.maps.places.PlacesServiceStatus.OK){
-                me.placeNameArray.push(place.name)
-            }
-            console.log(me.placeNameArray);
-        });
-    }
-}
 
 
