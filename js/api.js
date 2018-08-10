@@ -18,20 +18,14 @@ function AutocompleteDirectionHandler(map){
     this.placeNameArray = [];
     this.placeIndex = 0;
     this.icon = null;
-
-    //Get the value of the waypoint inputs
     let placeInput = document.getElementById('place-input');
 
-    //service that computes directions between two or more places. 
     this.directionsService = new google.maps.DirectionsService;
-
-    //Direction Renderer renders the directions obtained from the DirectionService. 
     this.directionsRender = new google.maps.DirectionsRenderer({
         draggable: true,
         map: map,
     });
     this.placeService = new google.maps.places.PlacesService(map);
-    //Creating new objects from Google Map API
     let placeAutocomplete = new google.maps.places.Autocomplete(placeInput);
     this.marker = new google.maps.Marker({
         map: map,

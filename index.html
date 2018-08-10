@@ -14,8 +14,8 @@
 </head>
 <body>
     <div class="grid-container">
-        <main id="left-panel" class="panel list">
-            <header class="header">
+        <main role="main" id="left-panel" class="panel list">
+            <header role="banner" class="header">
                 <h1>PlanIt</h1>
                 <p class="desc">You can enter multiple waypoints!</p>
             </header>
@@ -33,10 +33,10 @@
                     <label class="radio-button" for="changemode-driving"><i class="fas fa-car"></i></label>
                 </div>
             </div>
-            <div class="js-route-index"></div>
-            <div class="js-route-total"></div>
+            <div class="js-route-index" aria-live"assertive" hidden></div>
+            <div class="js-route-total" aria-live"assertive" hidden></div>
         </main>
-        <section class="map gmap">
+        <section role="region" class="map gmap">
             <div id="map" class="gmap"></div>
         </section>
     </div>
