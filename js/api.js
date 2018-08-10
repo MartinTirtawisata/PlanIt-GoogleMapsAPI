@@ -4,10 +4,8 @@ function initMap() {
         center: {lat: 34.1478, lng: -118.1445},
         zoom: 15
     });
-
     new AutocompleteDirectionHandler(map);
 }
-
 function AutocompleteDirectionHandler(map){
     this.map = map;
     this.placeId = null;
@@ -23,19 +21,18 @@ function AutocompleteDirectionHandler(map){
 
     //Get the value of the waypoint inputs
     let placeInput = document.getElementById('place-input');
+
     //service that computes directions between two or more places. 
     this.directionsService = new google.maps.DirectionsService;
-    //Direction Renderer = renders the directions obtained from the DirectionService. 
+
+    //Direction Renderer renders the directions obtained from the DirectionService. 
     this.directionsRender = new google.maps.DirectionsRenderer({
         draggable: true,
         map: map,
     });
-
     this.placeService = new google.maps.places.PlacesService(map);
-
     //Creating new objects from Google Map API
     let placeAutocomplete = new google.maps.places.Autocomplete(placeInput);
-
     this.marker = new google.maps.Marker({
         map: map,
         anchorPoint: new google.maps.Point(0,0)
@@ -44,7 +41,6 @@ function AutocompleteDirectionHandler(map){
     this.setupModeChange('changemode-walking', 'WALKING');
     this.setupModeChange('changemode-transit', 'TRANSIT');
     this.setupModeChange('changemode-driving', 'DRIVING');
-
     this.setupPlaceChangedListener(placeAutocomplete, "ORIG");   
     this.setupDirectionsChangeListener();
 }
@@ -54,21 +50,16 @@ AutocompleteDirectionHandler.prototype.setupModeChange = function(radio, modeSel
     let radioButton = document.getElementById(radio);
     radioButton.addEventListener('click', function(){
         me.travelMode = modeSelect
-
         me.displayRoute();
     });
 };
 
 AutocompleteDirectionHandler.prototype.setupPlaceChangedListener = function(autocompleteSettings, mode){
-    console.log('1')
     let me = this;
     autocompleteSettings.bindTo('bounds', this.map);
     autocompleteSettings.setFields(['geometry','name','place_id' ])
     autocompleteSettings.addListener('place_changed', function(){
-    
         let getPlace = autocompleteSettings.getPlace();
-        console.log(getPlace);
-        let getCenter = me.map.getCenter();
         if (!getPlace.place_id) {
             window.alert("Incorrect input");
             return;
@@ -91,8 +82,8 @@ AutocompleteDirectionHandler.prototype.setupPlaceChangedListener = function(auto
     }); 
 };
 
+//This retrieves the name of the place 
 AutocompleteDirectionHandler.prototype.getPlaceDetail = function(){
-    console.log('3')
     let me = this;
     if (this.placeId){
         this.placeService.getDetails({
@@ -105,22 +96,15 @@ AutocompleteDirectionHandler.prototype.getPlaceDetail = function(){
     }
 }
 
+//This function puts the waypoints retrieved into an array
 AutocompleteDirectionHandler.prototype.setLocationArray = function(){
-
-
     if (this.placeId){
-        console.log('4')
         this.placeIdArray.push({
             placeId: this.placeId
-        });
-        // console.log(this.placeIdArray[0]);
-        // console.log(this.placeIdArray[this.placeIdArray.length-1]);
-        // console.log(this.placeIdArray);
+        });        
     }
     if (this.placeIdArray.length >= 3 && this.travelMode != "TRANSIT"){
-
         let wypts = this.placeIdArray.slice(1,-1)
-        console.log(wypts);
         this.waypointsArray.push({
             location: wypts[this.wyptIndex],
             stopover: true
@@ -132,12 +116,10 @@ AutocompleteDirectionHandler.prototype.setLocationArray = function(){
             alert("Transit mode can only have 2 destinations max!")
         }    
     }
-    
 }
 
 AutocompleteDirectionHandler.prototype.setMarker = function(place){
     if (this.placeIdArray.length == 1){
-        console.log('setting the markers')
         this.marker.setVisible(false);
         if (place.geometry.viewport){
             this.map.fitBounds(place.geometry.viewport)
@@ -145,14 +127,12 @@ AutocompleteDirectionHandler.prototype.setMarker = function(place){
         this.map.setCenter(place.geometry.location);
         this.map.setZoom(14);
         }
-
         this.marker.setPosition(place.geometry.location);
         this.marker.setVisible(true);
     }
 }
 
 AutocompleteDirectionHandler.prototype.setIconType = function(){
-
     if (this.travelMode == 'WALKING'){
         this.icon =`<i class="fas fa-walking"></i>`;
     } else if(this.travelMode == 'DRIVING'){
@@ -170,8 +150,6 @@ AutocompleteDirectionHandler.prototype.displayRoute = function(){
     }
 
     let me = this;
-    console.log("rendering displayRoute");
-    console.log('5')
     directionRequest = {
         origin: this.placeIdArray[0],
         destination: this.placeIdArray[this.placeIdArray.length-1],
@@ -192,7 +170,6 @@ AutocompleteDirectionHandler.prototype.displayRoute = function(){
 };
 
 AutocompleteDirectionHandler.prototype.setupDirectionsChangeListener = function(){
-    console.log('2')
     let me = this;
     this.directionsRender.addListener('directions_changed', function(){
         me.computeTotalDistance(me.directionsRender.getDirections());
@@ -200,15 +177,10 @@ AutocompleteDirectionHandler.prototype.setupDirectionsChangeListener = function(
 };
 
 AutocompleteDirectionHandler.prototype.computeTotalDistance = function(result){
-    console.log('6')
-    console.log("calculating route distance")
     this.marker.setVisible(false);
-
     let totalDuration = 0
     let totalDistance = 0
     let myRoute = result.routes[0];
-    console.log(myRoute);
-
     if (this.placeNameArray[1]){
         this.routeInformation.push({
             start_address: myRoute.legs[this.routeIndex].start_address,
@@ -229,11 +201,8 @@ AutocompleteDirectionHandler.prototype.computeTotalDistance = function(result){
 
     totalDistance = ((totalDistance/60)/60);
     totalDuration = (totalDuration/60);
-
     distance = totalDistance.toFixed(2);
     duration = totalDuration.toFixed(2);
-
-    console.log(this.routeInformation);
     renderUserInfo(this.routeInformation, this.routeIndex);
     displayTotal(distance, duration)
     deleteRouteIndex(this.routeIndex);
