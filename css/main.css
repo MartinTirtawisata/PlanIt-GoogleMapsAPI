@@ -44,6 +44,7 @@ body {
     padding: 0 10px;
     width: 100%;
     font-size: 18px;
+    position: relative;
     
 
     /* border: black 2px solid; */
@@ -68,7 +69,7 @@ body {
 }
 
 .start-right{
-    padding-left: 60px;
+    padding-left: 20px;
 }
 
 .info-duration {
@@ -78,4 +79,28 @@ body {
 .info-distance{
     color: #FF6700;
 }
+
+.inline{
+    display: inline-block;
+}
+
+.delete-button{
+    background: #1269F4;
+    color: white;
+    font-size: 16px;
+    border: none;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.delete-button:hover {
+    background: #0359E2;
+}
+
+.delete-button:active{
+    color: grey;
+
+}
+
 
