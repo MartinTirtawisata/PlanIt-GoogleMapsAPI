@@ -7,15 +7,6 @@ function displayTotal(distance, duration){
     $('.js-route-total').html(`<div class="route-info"><p>Total Distance: <span class="info-distance">${distance} mi</span></p><p>Total Duration: <span class="info-duration">${duration} mins</span></div>`)
 }
 
-function displayInputInfo(){
-    $('.input-container').hover(
-        function(){
-        $('.desc').css('display','block');
-    }, function(){
-        $('.desc').css('display','none');
-    })
-}
-
 function disableInput(){
     $('input[name=type]').prop("disabled", true);
 }
